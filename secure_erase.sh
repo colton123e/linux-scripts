@@ -59,8 +59,8 @@ if [ "$1" == "-d" ] ; then
 		* ) echo "Please answer yes or no.";;
 	esac
    done
-   shred -vfz ${drivename}
-   badblocks -wsv ${drivename}
+   shred -vfz -n 6 ${drivename}
+   echo "Erase complete!"
 	exit 1
 
 ## Erase the SSD	
