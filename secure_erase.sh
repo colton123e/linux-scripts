@@ -75,7 +75,15 @@ elif [ "$1" == "-s" ] ; then
 		* ) echo "Please answer yes or no.";;
 	esac
    done
- #  hdparm
+   state=$( hdparm -I ${ssdname} | awk '/locked/ {print $1}' )
+   erasesupport=$( hdparm -I ${ssdname} | awk '/supported:/ {print $2,$3}' )
+   echo "state: ${state}"
+   echo "supported: ${erasesupport}"
+   
+   if [[ "$state" == "not"  &&  "$erasesupport" == "enhanced erase" ]] ; then
+   #Continue with erase
+   echo "Test"
+   fi
 	exit 1
 fi
 
