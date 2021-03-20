@@ -11,10 +11,10 @@ display_help()
   echo "Syntax: $0 [-options]"
   echo
   echo "-d <drive>	Use this option to wipe only HDDs (uses the shred"
-  echo "		(and then badblocks commands to securely wipe the HDD)."
+  echo "	    command to securely wipe the HDD)."
   echo "-s <drive>	Use this option to wipe only SSDs (uses the hdparm"
-  echo "		command to properlywipe the SSD)."
-  echo "-l	List attached disks with grepping for only non-loop devices"
+  echo "		command to properly wipe the SSD)."
+  echo "-l	List attached disks with grepping for only /dev/sd devices"
   echo "-e	Run the fdisk -l command to list attached disks in detail"
   echo
   exit 1
@@ -59,7 +59,7 @@ if [ "$1" == "-d" ] ; then
 		* ) echo "Please answer yes or no.";;
 	esac
    done
-   shred -vfz -n 6 ${drivename}
+   time shred -vfz -n 6 ${drivename}
    echo "Erase complete!"
 	exit 1
 
@@ -83,8 +83,17 @@ elif [ "$1" == "-s" ] ; then
    if [[ "$state" == "not"  &&  "$erasesupport" == "enhanced erase" ]] ; then
    #Continue with erase
    echo "Test"
+    time hdparm --user-master --security-erase-enhanced SecurePassword1 ${ssdname}
+   else
+   #Abort Erase
+     echo "Abort erase! Drive is frozen or does not support enhanced erase."
+     exit 1
    fi
 	exit 1
+elif [[ "$1" != "-s" && "$1" != "-d" ]] ; then
+	display_help
+	exit 0
+  fi
 fi
 
 
