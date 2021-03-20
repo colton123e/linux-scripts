@@ -83,7 +83,7 @@ elif [ "$1" == "-s" ] ; then
    if [[ "$state" == "not"  &&  "$erasesupport" == "enhanced erase" ]] ; then
    #Continue with erase
    echo "Test"
-    time hdparm --user-master --security-erase-enhanced SecurePassword1 ${ssdname}
+    time hdparm --user-master u --security-erase-enhanced SecurePassword1 ${ssdname}
    else
    #Abort Erase
      echo "Abort erase! Drive is frozen or does not support enhanced erase."
